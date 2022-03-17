@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load om_filters %}
+
+{% block 'title' %}
+  Blog 
+  {% if category %}
+   {{ category }}
+  {% endif %}
+{% endblock %}
+
+{% block 'content' %}
+
+  <!-- CONTENT -->
+  <div class="card-columns mt-4">
+  {% for post in posts %}
+    <div class="card">
+      {% if post.image %}
+        <a href="{% url 'post_details' post.id %}">
+            <img class="card-img-top"
+                src="{{ post.image.url }}"
+                alt="{{ post.title }}">
+        </a>
+      {% endif %}
+
+      <div class="card-body">
+          <h5 class="card-title">
+              <a href="{% url 'post_details' post.id %}">
+                  {{ post.title }}
+              </a>
+          </h5>
+          <p class="card-text" style="text-align: justify; letter-spacing: -1px;">
+            {{ post.excerpt|short }}
+          </p>
+          <p class="card-text">
+              <small class="text-muted">{{ post.date|naturalday|title }} | {{ post.len_comments|plural_comments }} | {{ post.category }}</small>
+          </p>
+
+          <div class="text-right">
+              <a href="{% url 'post_details' post.id %}" class="btn btn-outline-secondary">Ler mais...</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <!--/CONTENT-->
+  {# {{ connection.queries|length }} #}  
+  {# {{ connection.queries }} #}  
+  {% include 'partials/_pagination.html' %}
+{% endblock %}
